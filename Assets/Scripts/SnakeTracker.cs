@@ -11,10 +11,13 @@ public class SnakeTracker : MonoBehaviour
     [SerializeField] private SnakeHead _snakeHead;
     [SerializeField] private float _offsetY;
     [SerializeField] private float _speed;
-
+    
     private void FixedUpdate()
     {
-        transform.position = Vector3.Lerp(transform.position, GetTargetPosition(), _speed * Time.fixedDeltaTime);
+        if (_snakeHead)
+        {
+            transform.position = Vector3.Lerp(transform.position, GetTargetPosition(), _speed * Time.fixedDeltaTime);
+        }
     }
 
     private Vector3 GetTargetPosition()

@@ -12,7 +12,8 @@ public class CametaResolution : MonoBehaviour
     {
         _camera = Camera.main;
         _defaultWegth = _camera.orthographicSize * _camera.aspect;
-    }
+        Debug.Log(_camera.orthographicSize + " " + _camera.aspect);
+}
 
     private void Update()
     {

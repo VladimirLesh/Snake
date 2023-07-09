@@ -17,6 +17,7 @@ public class Snake : MonoBehaviour
     private List<Segment> _tail;
     private TailGenerator _tailGenerator;
     private SnakeInput _snakeInput;
+    private Camera _camera;
 
     public event UnityAction<int> SizeUpdated;
 
@@ -79,7 +80,6 @@ public class Snake : MonoBehaviour
         {
             Destroy(_head.gameObject);
             Destroy(gameObject);
-            
         }
     }
 

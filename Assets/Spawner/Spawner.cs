@@ -20,24 +20,41 @@ public class Spawner : MonoBehaviour
     [SerializeField] private Wall _wallTamplate;
     [SerializeField] private int _wallSpawnChance;
 
-    private BlockSpawnPoint[] _blockSpawnPoint;
-    private WallSpawnPoint[] _wallSpawnPoints;
+    [Header("Bonus")]
+    [SerializeField] private Bonus _bonus;
+    [SerializeField] private int _bonusSpawnChance;
+
+
+    [SerializeField] private BlockSpawnPoint[] _blockSpawnPoint;
+    [SerializeField] private WallSpawnPoint[] _wallSpawnPoints;
+    [SerializeField] private BonusSpawnPoint[] _bonusSpawnPoints;
     private void Start()
     {
         _blockSpawnPoint = GetComponentsInChildren<BlockSpawnPoint>();
         _wallSpawnPoints = GetComponentsInChildren<WallSpawnPoint>();
+        _bonusSpawnPoints = GetComponentsInChildren<BonusSpawnPoint>();
 
         for (int i = 0; i < _repeatCount; i++)
         {
             MoveSpawner(_distanceBeatweenFullLine);
             GenerateFullLineElements(_blockSpawnPoint, _blockTamplate.gameObject);
             GenerateRandomLineElements(_wallSpawnPoints, _wallTamplate.gameObject, _wallSpawnChance,
-                _distanceBeatweenFullLine, _distanceBeatweenFullLine / 2f);
-            MoveSpawner(_distanceBeatweenRandomLine);
-            GenerateRandomLineElements(_blockSpawnPoint, _blockTamplate.gameObject, _blockSpawnChance);
-            GenerateRandomLineElements(_wallSpawnPoints, _wallTamplate.gameObject, _wallSpawnChance, 
-                _distanceBeatweenRandomLine, _distanceBeatweenRandomLine / 2f);
+            _distanceBeatweenFullLine, _distanceBeatweenFullLine / 2f);
+            GenerateRandomBonusElements(_bonusSpawnPoints,_bonus.gameObject,  _bonusSpawnChance);
+
+            GeneratePartOfLevel();
+            GeneratePartOfLevel();
+            GeneratePartOfLevel();
         }
+    }
+
+    private void GeneratePartOfLevel()
+    {
+        MoveSpawner(_distanceBeatweenRandomLine);
+        GenerateRandomLineElements(_blockSpawnPoint, _blockTamplate.gameObject, _blockSpawnChance);
+        GenerateRandomLineElements(_wallSpawnPoints, _wallTamplate.gameObject, _wallSpawnChance, 
+            _distanceBeatweenRandomLine, _distanceBeatweenRandomLine / 2f);
+        GenerateRandomBonusElements(_bonusSpawnPoints,_bonus.gameObject,  _bonusSpawnChance);
     }
 
     private void GenerateFullLineElements(SpawnPoint[] spawnPoints, GameObject _blockTamplate)
@@ -55,6 +72,19 @@ public class Spawner : MonoBehaviour
             if (Random.Range(0, 100) < blockSpawnChance)
             {
                 GameObject element = GenerateElement(spawnPoints[i].transform.position, blockTamplate, offsetY);
+                element.transform.localScale = new Vector3(element.transform.localScale.x,
+                    scaleY, element.transform.localScale.z);
+            }
+        }
+    }
+    
+    private void GenerateRandomBonusElements(BonusSpawnPoint[] spawnPoints, GameObject bonusTamplate, int bonusSpawnChance, float scaleY = 0.25f, float offsetY = 0)
+    {
+        for (int i = 0; i < spawnPoints.Length; i++)
+        {
+            if (Random.Range(0, 100) < bonusSpawnChance)
+            {
+                GameObject element = GenerateElement(spawnPoints[i].transform.position, bonusTamplate, offsetY);
                 element.transform.localScale = new Vector3(element.transform.localScale.x,
                     scaleY, element.transform.localScale.z);
             }
